@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotes App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Quotes App</h1>
+    <button onclick="loadQuotes()">Load Quotes</button>
+    <ul id="quotesList"></ul>
+    <p id="message" style="color: green;"></p>
+
+    <h2>Add a Quote</h2>
+    <input type="text" id="quoteText" placeholder="Enter quote text">
+    <input type="text" id="quoteAuthor" placeholder="Enter author">
+    <button onclick="addQuote()">Add Quote</button>
+
+    <script src="app.js"></script>
+</body>
+</html>

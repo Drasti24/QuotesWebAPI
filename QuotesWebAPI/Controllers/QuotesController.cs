@@ -20,21 +20,50 @@ namespace QuotesWebAPI.Controllers
 
         // GET: api/quotes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Quote>>> GetQuotes()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<object>>> GetQuotes()
         {
-            return await _context.Quotes.ToListAsync();
+            var quotes = await _context.Quotes
+                .Include(q => q.TagAssignments)
+                .ThenInclude(ta => ta.Tag)
+                .Select(q => new
+                {
+                    q.Id,
+                    q.Text,
+                    q.Author,
+                    q.Likes,
+                    Tags = q.TagAssignments.Select(ta => new { ta.Tag.Id, ta.Tag.Name }).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(quotes);
         }
+
 
         // GET: api/quotes/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Quote>> GetQuote(int id)
+        public async Task<ActionResult<object>> GetQuote(int id)
         {
-            var quote = await _context.Quotes.FindAsync(id);
+            var quote = await _context.Quotes
+                .Include(q => q.TagAssignments)
+                .ThenInclude(ta => ta.Tag)
+                .Where(q => q.Id == id)
+                .Select(q => new
+                {
+                    q.Id,
+                    q.Text,
+                    q.Author,
+                    q.Likes,
+                    Tags = q.TagAssignments.Select(ta => new { ta.Tag.Id, ta.Tag.Name }).ToList()
+                })
+                .FirstOrDefaultAsync();
+
             if (quote == null)
             {
                 return NotFound();
             }
-            return quote;
+
+            return Ok(quote);
         }
 
         // POST: api/quotes
@@ -91,25 +120,36 @@ namespace QuotesWebAPI.Controllers
         [HttpPost("{id}/tags")]
         public async Task<IActionResult> AssignTagToQuote(int id, [FromBody] string tagName)
         {
-            var quote = await _context.Quotes.FindAsync(id);
+            if (string.IsNullOrWhiteSpace(tagName))
+            {
+                return BadRequest(new { message = "Tag name cannot be empty" });
+            }
+
+            var quote = await _context.Quotes.Include(q => q.TagAssignments).FirstOrDefaultAsync(q => q.Id == id);
             if (quote == null)
             {
                 return NotFound(new { message = "Quote not found" });
             }
 
+            // Create tag if it does not exist
             var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tagName);
             if (tag == null)
             {
                 tag = new Tag { Name = tagName };
                 _context.Tags.Add(tag);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // Save tag creation immediately
             }
 
-            var tagAssignment = new TagAssignment { QuoteId = quote.Id, TagId = tag.Id };
-            _context.TagAssignments.Add(tagAssignment);
-            await _context.SaveChangesAsync();
+            // Check if tag is already assigned to the quote
+            bool alreadyAssigned = await _context.TagAssignments.AnyAsync(ta => ta.QuoteId == quote.Id && ta.TagId == tag.Id);
+            if (!alreadyAssigned)
+            {
+                var tagAssignment = new TagAssignment { QuoteId = quote.Id, TagId = tag.Id };
+                _context.TagAssignments.Add(tagAssignment);
+                await _context.SaveChangesAsync(); // Save tag assignment
+            }
 
-            return Ok(new { message = $"Tag '{tagName}' assigned to quote.", quoteId = quote.Id, tagId = tag.Id });
+            return Ok(new { message = $"Tag '{tagName}' assigned to quote ID {quote.Id}.", quoteId = quote.Id, tagId = tag.Id });
         }
 
 

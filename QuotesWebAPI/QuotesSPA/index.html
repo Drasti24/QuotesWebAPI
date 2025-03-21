@@ -8,21 +8,29 @@
 </head>
 
 <body>
-    <h1>Quotes App</h1>
-    <button onclick="loadQuotes()">Load Quotes</button>
-    <ul id="quotesList"></ul>
+    <h1>📜 Quotes App</h1>
 
-    <h2>Assign a Tag to a Quote</h2>
-    <input type="number" id="quoteIdForTag" placeholder="Enter Quote ID">
-    <input type="text" id="tagName" placeholder="Enter Tag Name">
-    <button onclick="assignTag()">Assign Tag</button>
-    <p id="tagMessage" style="color: green;"></p>
+    <div class="container">
+        <button onclick="loadQuotes()">🔄 Load Quotes</button>
+        <ul id="quotesList"></ul>
+    </div>
 
-    <h2>Add a Quote</h2>
-    <input type="text" id="quoteText" placeholder="Enter quote text">
-    <input type="text" id="quoteAuthor" placeholder="Enter author">
-    <button onclick="addQuote()">Add Quote</button>
+    <div class="container">
+        <h2>🏷️ Assign a Tag to a Quote</h2>
+        <input type="number" id="quoteIdForTag" placeholder="Enter Quote ID">
+        <input type="text" id="tagName" placeholder="Enter Tag Name">
+        <button class="show-tags-btn" onclick="assignTag()">Assign Tag</button>
+        <p id="tagMessage" style="color: green;"></p>
+    </div>
+
+    <div class="container">
+        <h2>✍️ Add a Quote</h2>
+        <input type="text" id="quoteText" placeholder="Enter quote text">
+        <input type="text" id="quoteAuthor" placeholder="Enter author">
+        <button class="like-btn" onclick="addQuote()">Add Quote</button>
+    </div>
 
     <script src="app.js"></script>
 </body>
+
 </html>

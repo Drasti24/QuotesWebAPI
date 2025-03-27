@@ -1,0 +1,84 @@
+﻿
+/* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Header */
+h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+/* Buttons */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+/* Inputs */
+input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 5px;
+    width: 200px;
+}
+
+/* Quotes List */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px auto;
+    width: 60%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+strong {
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Tag and Like Buttons */
+button.like-btn {
+    background-color: #ff4b5c;
+}
+
+    button.like-btn:hover {
+        background-color: #d63b4a;
+    }
+
+button.show-tags-btn {
+    background-color: #28a745;
+}
+
+    button.show-tags-btn:hover {
+        background-color: #218838;
+    }
+
+/* Message Styling */
+#tagMessage {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+

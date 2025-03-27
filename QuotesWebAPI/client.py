@@ -4,20 +4,27 @@ import random
 API_URL = "http://localhost:5035/api/quotes"
 
 
-def load_quotes_from_file(filename):
-    """Loads quotes from file ONLY (does NOT fetch API quotes)."""
+def load_quotes_from_file(filename="quotes.txt"):
     try:
         with open(filename, "r", encoding="utf-8") as file:
             lines = file.readlines()
 
-        print("\n Quotes from File:")
         for line in lines:
             parts = line.strip().split(" - ")
-            text, author = (parts[0], parts[1]) if len(parts) == 2 else (parts[0], "Unknown")
-            print(f" \"{text}\" - {author}")
+            if len(parts) == 2:
+                text, author = parts
+            else:
+                text, author = parts[0], "Unknown"
+
+            response = requests.post(API_URL, json={"text": text, "author": author})
+            if response.status_code == 201:
+                print(f"Added: \"{text}\" - {author}")
+            else:
+                print(f"Failed to add: \"{text}\" - {author}")
 
     except FileNotFoundError:
-        print(f"  File {filename} not found!")
+        print("quotes.txt file not found!")
+
 
 
 def get_all_quotes():
@@ -84,18 +91,17 @@ def delete_quote():
 def main():
     while True:
         print("\n Quotes CLI Menu:")
-        print("1️ Load Quotes from File")
-        print("2️ Get All Quotes (API + File)")
-        print("3️ Add a New Quote")
-        print("4️ Get a Random Quote")
-        print("5️ Like a Quote")
-        print("6️ Delete a Quote")
-        print("7️ Exit")
+        print("1 Load Quotes from File (one-time)")
+        print("2 Get All Quotes")
+        print("3 Add a New Quote")
+        print("4 Get a Random Quote")
+        print("5 Like a Quote")
+        print("6 Delete a Quote")
+        print("7 Exit")
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            filename = input("Enter the file name (quotes.txt): ").strip() or "quotes.txt"
-            load_quotes_from_file(filename)
+            load_quotes_from_file()
         elif choice == "2":
             get_all_quotes()
         elif choice == "3":

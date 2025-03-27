@@ -75,19 +75,6 @@ namespace QuotesWebAPI.Controllers
             return CreatedAtAction(nameof(GetQuote), new { id = quote.Id }, quote);
         }
 
-        // PUT: api/quotes/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuote(int id, Quote quote)
-        {
-            if (id != quote.Id)
-            {
-                return BadRequest();
-            }
-            _context.Entry(quote).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
-
         // DELETE: api/quotes/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuote(int id)
@@ -150,6 +137,47 @@ namespace QuotesWebAPI.Controllers
             }
 
             return Ok(new { message = $"Tag '{tagName}' assigned to quote ID {quote.Id}.", quoteId = quote.Id, tagId = tag.Id });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateQuote(int id, [FromBody] Quote updatedQuote)
+        {
+            var quote = await _context.Quotes.FindAsync(id);
+            if (quote == null)
+            {
+                return NotFound();
+            }
+
+            // Update the fields
+            if (!string.IsNullOrWhiteSpace(updatedQuote.Text))
+                quote.Text = updatedQuote.Text;
+
+            // Author is optional
+            quote.Author = updatedQuote.Author;
+
+            await _context.SaveChangesAsync();
+            return Ok(quote);
+        }
+
+        [HttpGet("topliked")]
+        public async Task<ActionResult<IEnumerable<object>>> GetTopLikedQuotes([FromQuery] int count = 10)
+        {
+            var topQuotes = await _context.Quotes
+                .OrderByDescending(q => q.Likes)
+                .Take(count)
+                .Include(q => q.TagAssignments)
+                    .ThenInclude(ta => ta.Tag)
+                .Select(q => new
+                {
+                    q.Id,
+                    q.Text,
+                    q.Author,
+                    q.Likes,
+                    Tags = q.TagAssignments.Select(ta => new { ta.Tag.Id, ta.Tag.Name }).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(topQuotes);
         }
 
 

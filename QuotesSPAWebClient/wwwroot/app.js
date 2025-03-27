@@ -148,5 +148,5 @@ function loadTagSuggestions() {
 
 window.onload = () => {
     loadQuotes();
-    loadTagSuggestions(); 
+    loadTagSuggestions();
 };

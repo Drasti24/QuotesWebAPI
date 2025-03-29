@@ -34,10 +34,13 @@
     <div class="container">
         <h2>✏️ Edit a Quote</h2>
         <input type="number" id="editQuoteId" placeholder="Enter Quote ID">
+        <button onclick="fetchQuoteForEdit()">Fetch Quote</button>
+        <br>
         <input type="text" id="editQuoteText" placeholder="Enter new quote text">
         <input type="text" id="editQuoteAuthor" placeholder="Enter new author">
         <button onclick="editQuote()">Update Quote</button>
         <p id="editMessage" style="color: green;"></p>
+
     </div>
 
     <div class="container">
@@ -45,6 +48,20 @@
         <input type="number" id="likedCount" placeholder="How many quotes to list?" value="5">
         <button onclick="loadMostLiked()">Show Most Liked</button>
         <ul id="mostLikedList"></ul>
+    </div>
+
+    <div class="container">
+        <h2>🔍 Get Quotes by Tag</h2>
+        <input type="text" id="searchTag" placeholder="Enter tag name" list="tagSuggestions">
+        <button onclick="getQuotesByTag()">Search</button>
+        <ul id="taggedQuotesList"></ul>
+    </div>
+
+    <div class="container">
+        <h2>🔎 Get Quote by ID</h2>
+        <input type="number" id="quoteIdSearch" placeholder="Enter Quote ID">
+        <button onclick="getQuoteById()">Search</button>
+        <div id="quoteByIdResult"></div>
     </div>
 
     <script src="app.js"></script>

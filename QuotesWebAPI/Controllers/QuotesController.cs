@@ -180,6 +180,27 @@ namespace QuotesWebAPI.Controllers
             return Ok(topQuotes);
         }
 
+        [HttpGet("bytag/{tag}")]
+        public async Task<ActionResult<IEnumerable<object>>> GetQuotesByTag(string tag)
+        {
+            var quotes = await _context.Quotes
+                .Include(q => q.TagAssignments)
+                .ThenInclude(ta => ta.Tag)
+                .Where(q => q.TagAssignments.Any(ta => ta.Tag.Name.ToLower() == tag.ToLower()))
+                .Select(q => new
+                {
+                    q.Id,
+                    q.Text,
+                    q.Author,
+                    q.Likes,
+                    Tags = q.TagAssignments.Select(ta => new { ta.Tag.Id, ta.Tag.Name }).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(quotes);
+        }
+
+
 
     }
 }

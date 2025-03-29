@@ -146,7 +146,97 @@ function loadTagSuggestions() {
         .catch(error => console.error("Error loading tag suggestions:", error));
 }
 
+function getQuotesByTag() {
+    const tag = document.getElementById("searchTag").value.trim();
+    if (!tag) {
+        alert("Please enter a tag to search.");
+        return;
+    }
+
+    console.log("Searching quotes for tag:", tag);
+
+    fetch(`${apiUrl}/bytag/${encodeURIComponent(tag)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch quotes for tag "${tag}" (Status: ${response.status})`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const list = document.getElementById("taggedQuotesList");
+            list.innerHTML = "";
+
+            if (data.length === 0) {
+                list.innerHTML = `<li>No quotes found for tag "${tag}".</li>`;
+                return;
+            }
+
+            data.forEach(quote => {
+                const li = document.createElement("li");
+                li.innerHTML = `[ID: ${quote.id}] "${quote.text}" - ${quote.author} 
+                <strong>(Likes: ${quote.likes})</strong>
+                <button onclick="likeQuote(${quote.id})">❤️ Like</button><br>
+                <span>📌 Tags: ${quote.tags?.map(t => t.name).join(", ") || "None"}</span>`;
+                list.appendChild(li);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching quotes by tag:", error);
+            alert("Failed to load quotes. See console for details.");
+        });
+}
+
+function getQuoteById() {
+    const id = document.getElementById("quoteIdSearch").value;
+    if (!id) {
+        document.getElementById("quoteByIdResult").innerHTML = "Please enter a Quote ID.";
+        return;
+    }
+
+    fetch(`${apiUrl}/${id}`)
+        .then(response => {
+            if (!response.ok) throw new Error("Quote not found");
+            return response.json();
+        })
+        .then(quote => {
+            document.getElementById("quoteByIdResult").innerHTML = `
+                <strong>[ID: ${quote.id}]</strong> "${quote.text}" - ${quote.author || "Unknown"}<br>
+                ❤️ Likes: ${quote.likes}<br>
+                📌 Tags: ${quote.tags?.map(t => t.name).join(", ") || "None"}
+            `;
+        })
+        .catch(error => {
+            document.getElementById("quoteByIdResult").innerHTML = "Quote not found.";
+            console.error("Error fetching quote by ID:", error);
+        });
+}
+
+function fetchQuoteForEdit() {
+    const id = document.getElementById("editQuoteId").value;
+
+    if (!id) {
+        document.getElementById("editMessage").innerText = "Please enter a Quote ID.";
+        return;
+    }
+
+    fetch(`${apiUrl}/${id}`)
+        .then(response => {
+            if (!response.ok) throw new Error("Quote not found");
+            return response.json();
+        })
+        .then(quote => {
+            document.getElementById("editQuoteText").value = quote.text;
+            document.getElementById("editQuoteAuthor").value = quote.author || "";
+            document.getElementById("editMessage").innerText = "Quote loaded. You can now edit.";
+        })
+        .catch(error => {
+            console.error("Error fetching quote:", error);
+            document.getElementById("editMessage").innerText = "Quote not found.";
+        });
+}
+
+
 window.onload = () => {
-    loadQuotes();
+    //loadQuotes();
     loadTagSuggestions();
 };

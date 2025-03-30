@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿<!--//DRASTI PATEL
+//MARCH 30, 2025
+//PROLEM ANALYSIS 03-->
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,11 +14,13 @@
 <body>
     <h1>📜 Quotes App</h1>
 
+    <!-- Load all quotes -->
     <div class="container">
         <button onclick="loadQuotes()">🔄 Load Quotes</button>
         <ul id="quotesList"></ul>
     </div>
 
+    <!-- Assign a tag to a quote -->
     <div class="container">
         <h2>🏷️ Assign a Tag to a Quote</h2>
         <input type="number" id="quoteIdForTag" placeholder="Enter Quote ID">
@@ -24,6 +30,7 @@
         <p id="tagMessage" style="color: green;"></p>
     </div>
 
+    <!-- Add a new quote -->
     <div class="container">
         <h2>✍️ Add a Quote</h2>
         <input type="text" id="quoteText" placeholder="Enter quote text">
@@ -31,6 +38,7 @@
         <button class="like-btn" onclick="addQuote()">Add Quote</button>
     </div>
 
+    <!-- Edit an existing quote -->
     <div class="container">
         <h2>✏️ Edit a Quote</h2>
         <input type="number" id="editQuoteId" placeholder="Enter Quote ID">
@@ -43,6 +51,7 @@
 
     </div>
 
+    <!-- Show most liked quotes -->
     <div class="container">
         <h2>🔥 Most Liked Quotes</h2>
         <input type="number" id="likedCount" placeholder="How many quotes to list?" value="5">
@@ -50,6 +59,7 @@
         <ul id="mostLikedList"></ul>
     </div>
 
+    <!-- Filter quotes by tag -->
     <div class="container">
         <h2>🔍 Get Quotes by Tag</h2>
         <input type="text" id="searchTag" placeholder="Enter tag name" list="tagSuggestions">
@@ -57,6 +67,7 @@
         <ul id="taggedQuotesList"></ul>
     </div>
 
+    <!-- Get a single quote by ID -->
     <div class="container">
         <h2>🔎 Get Quote by ID</h2>
         <input type="number" id="quoteIdSearch" placeholder="Enter Quote ID">
@@ -64,6 +75,7 @@
         <div id="quoteByIdResult"></div>
     </div>
 
+    <!-- Link to the main JS logic -->
     <script src="app.js"></script>
 </body>
 

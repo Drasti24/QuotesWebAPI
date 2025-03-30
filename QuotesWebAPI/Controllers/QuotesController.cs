@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//DRASTI PATEL
+//MARCH 30, 2025
+//PROLEM ANALYSIS 03
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuotesWebAPI.Data;
 using QuotesWebAPI.Models;
@@ -7,25 +11,27 @@ using System.Threading.Tasks;
 
 namespace QuotesWebAPI.Controllers
 {
+    //define route prefix for all endpoints in this controller
     [Route("api/quotes")]
     [ApiController]
     public class QuotesController : ControllerBase
     {
         private readonly QuotesDbContext _context;
 
+        //constructor with dependency injection for DB context
         public QuotesController(QuotesDbContext context)
         {
             _context = context;
         }
 
         // GET: api/quotes
-        [HttpGet]
+        //returns all quotes along with their associated tags.
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetQuotes()
         {
             var quotes = await _context.Quotes
-                .Include(q => q.TagAssignments)
-                .ThenInclude(ta => ta.Tag)
+                .Include(q => q.TagAssignments)    //load tag relationships
+                .ThenInclude(ta => ta.Tag)        //load tag details
                 .Select(q => new
                 {
                     q.Id,
@@ -39,8 +45,8 @@ namespace QuotesWebAPI.Controllers
             return Ok(quotes);
         }
 
-
         // GET: api/quotes/{id}
+        //returns a single quote by its ID
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> GetQuote(int id)
         {
@@ -67,6 +73,7 @@ namespace QuotesWebAPI.Controllers
         }
 
         // POST: api/quotes
+        //adds a new quote to the database
         [HttpPost]
         public async Task<ActionResult<Quote>> PostQuote(Quote quote)
         {
@@ -76,6 +83,7 @@ namespace QuotesWebAPI.Controllers
         }
 
         // DELETE: api/quotes/{id}
+        //deletes aquote by ID
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuote(int id)
         {
@@ -89,6 +97,8 @@ namespace QuotesWebAPI.Controllers
             return NoContent();
         }
 
+        // PATCH: api/quotes/{id}/like
+        //increments the like count of a quote
         [HttpPatch("{id}/like")]
         public async Task<IActionResult> LikeQuote(int id)
         {
@@ -104,6 +114,8 @@ namespace QuotesWebAPI.Controllers
             return Ok(new { message = "Quote liked successfully", likes = quote.Likes });
         }
 
+        // POST: api/quotes/{id}/tags
+        //assigns a tag to a quote and creates tag if it doesn't exist
         [HttpPost("{id}/tags")]
         public async Task<IActionResult> AssignTagToQuote(int id, [FromBody] string tagName)
         {
@@ -139,6 +151,8 @@ namespace QuotesWebAPI.Controllers
             return Ok(new { message = $"Tag '{tagName}' assigned to quote ID {quote.Id}.", quoteId = quote.Id, tagId = tag.Id });
         }
 
+        // PUT: api/quotes/{id}
+        //updates a quote's test and/or author
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQuote(int id, [FromBody] Quote updatedQuote)
         {
@@ -159,6 +173,8 @@ namespace QuotesWebAPI.Controllers
             return Ok(quote);
         }
 
+        // GET: api/quotes/topliked?count=5
+        //returns top N quotes sorted by like count (default 10)
         [HttpGet("topliked")]
         public async Task<ActionResult<IEnumerable<object>>> GetTopLikedQuotes([FromQuery] int count = 10)
         {
@@ -180,6 +196,8 @@ namespace QuotesWebAPI.Controllers
             return Ok(topQuotes);
         }
 
+        // GET: api/quotes/bytag/{tag}
+        //returns all quotes that contain a specific tag
         [HttpGet("bytag/{tag}")]
         public async Task<ActionResult<IEnumerable<object>>> GetQuotesByTag(string tag)
         {
@@ -199,8 +217,5 @@ namespace QuotesWebAPI.Controllers
 
             return Ok(quotes);
         }
-
-
-
     }
 }

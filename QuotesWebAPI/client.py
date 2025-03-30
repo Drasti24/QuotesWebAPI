@@ -1,9 +1,14 @@
-﻿import requests
+﻿# //DRASTI PATEL
+# //MARCH 30, 2025
+# //PROLEM ANALYSIS 03
+  
+import requests
 import random
 
+#Base URL for Web API
 API_URL = "http://localhost:5035/api/quotes"
 
-
+# Loads quotes from file and uploads them to the Web API (one-time setup)
 def load_quotes_from_file(filename="quotes.txt"):
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -25,7 +30,7 @@ def load_quotes_from_file(filename="quotes.txt"):
     except FileNotFoundError:
         print("quotes.txt file not found!")
 
-
+# Displays all quotes including their tags
 def get_all_quotes():
     """Fetches and displays all quotes from the API, including tags."""
     response = requests.get(API_URL)
@@ -39,8 +44,7 @@ def get_all_quotes():
     else:
         print("  Error fetching quotes.")
 
-
-
+# Allows user to manually enter a new quote
 def add_quote():
     """Manually add a new quote via user input."""
     text = input("Enter quote text: ").strip()
@@ -52,7 +56,7 @@ def add_quote():
     else:
         print(f"  Error: {response.text}")
 
-
+# Displays one random quote from the API
 def get_random_quote():
     """Fetches a random quote from the API."""
     response = requests.get(API_URL)
@@ -66,11 +70,11 @@ def get_random_quote():
     else:
         print(f"  Error fetching quotes: {response.text}")
 
-
+# Allows editing of a quote by fetching current values and updating them
 def edit_quote():
     quote_id = input("Enter the ID of the quote you want to edit: ").strip()
 
-    # Step 1: Fetch the quote
+    # Fetch the quote
     response = requests.get(f"{API_URL}/{quote_id}")
     if response.status_code != 200:
         print("  Quote not found!")
@@ -81,12 +85,12 @@ def edit_quote():
     current_author = quote.get("author", "Unknown")
     current_tags = [tag["name"] for tag in quote.get("tags", [])]
 
-    # Step 2: Display current values
+    # Display current values
     print(f"\nCurrent Text   : {current_text}")
     print(f"Current Author : {current_author}")
     print(f"Current Tags   : {', '.join(current_tags) if current_tags else 'None'}")
 
-    # Step 3: Ask for new input
+    # Ask for new input
     new_text = input("Enter new quote text (leave blank to keep): ").strip()
     new_author = input("Enter new author (leave blank to keep): ").strip()
 
@@ -95,13 +99,14 @@ def edit_quote():
         "author": new_author if new_author else current_author
     }
 
-    # Step 4: Send the update
+    # Send the update to API
     response = requests.put(f"{API_URL}/{quote_id}", json=updated_data)
     if response.status_code == 200:
         print("  ✅ Quote updated successfully!")
     else:
         print("  ❌ Failed to update quote.")
 
+# Increments the like count for a quote
 def like_quote():
     quote_id = input("Enter the ID of the quote you want to like: ").strip()
     response = requests.patch(f"{API_URL}/{quote_id}/like")
@@ -110,7 +115,7 @@ def like_quote():
     else:
         print("  Failed to like the quote.")
 
-
+# Displays the top liked quotes
 def get_most_liked():
     count = input("How many top liked quotes? (Default 5): ").strip() or "5"
     response = requests.get(f"{API_URL}/topliked?count={count}")
@@ -121,6 +126,7 @@ def get_most_liked():
     else:
         print("Failed to fetch most liked quotes.")
 
+# Assigns a new or existing tag to a quote
 def assign_tag():
     quote_id = input("Enter the Quote ID: ").strip()
     tag = input("Enter tag to assign: ").strip()
@@ -130,6 +136,7 @@ def assign_tag():
     else:
         print("  Failed to assign tag.")
 
+# Fetches quotes by a specific tag name
 def get_by_tag():
     tag = input("Enter tag to search quotes by: ").strip()
     response = requests.get(f"{API_URL}/bytag/{tag}")
@@ -144,6 +151,7 @@ def get_by_tag():
     else:
         print("  Error fetching quotes by tag.")
 
+# Deletes a quote by ID
 def delete_quote():
     """Deletes a quote by ID."""
     quote_id = input("Enter the ID of the quote you want to delete: ").strip()
@@ -154,7 +162,7 @@ def delete_quote():
     else:
         print("  Failed to delete quote.")
 
-
+# Entry point and menu handler
 def main():
     while True:
         print("\n Quotes CLI Menu:")
@@ -197,6 +205,6 @@ def main():
         else:
             print("  Invalid choice. Try again!")
 
-
+# Launch the CLI
 if __name__ == "__main__":
     main()

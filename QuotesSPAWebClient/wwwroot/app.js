@@ -1,4 +1,8 @@
-﻿const apiUrl = "http://localhost:5035/api/quotes";
+﻿//DRASTI PATEL
+//MARCH 30, 2025
+//PROLEM ANALYSIS 03
+
+const apiUrl = "http://localhost:5035/api/quotes";
 
 // Load all quotes and update UI
 function loadQuotes() {
@@ -82,6 +86,7 @@ function addQuote() {
         .catch(error => console.error("Error adding quote:", error));
 }
 
+// Edita an exiting quote using input fields
 function editQuote() {
     const id = document.getElementById("editQuoteId").value;
     const text = document.getElementById("editQuoteText").value;
@@ -113,6 +118,7 @@ function editQuote() {
         });
 }
 
+// Displays top N most liked quotes
 function loadMostLiked() {
     const count = document.getElementById("likedCount").value || 10;
     fetch(`${apiUrl}/topliked?count=${count}`)
@@ -131,6 +137,8 @@ function loadMostLiked() {
         })
         .catch(error => console.error("Error loading most liked quotes:", error));
 }
+
+//fetches all tag suggestions for tag autocomplete (used in datalist)
 function loadTagSuggestions() {
     fetch("http://localhost:5035/api/tags")
         .then(response => response.json())
@@ -146,6 +154,7 @@ function loadTagSuggestions() {
         .catch(error => console.error("Error loading tag suggestions:", error));
 }
 
+// Gets quotes that are associated with a specific tag
 function getQuotesByTag() {
     const tag = document.getElementById("searchTag").value.trim();
     if (!tag) {
@@ -186,6 +195,7 @@ function getQuotesByTag() {
         });
 }
 
+//Fetches quote by ID and displays it
 function getQuoteById() {
     const id = document.getElementById("quoteIdSearch").value;
     if (!id) {
@@ -211,6 +221,7 @@ function getQuoteById() {
         });
 }
 
+// Loads an existing quote into the edit fields for editing
 function fetchQuoteForEdit() {
     const id = document.getElementById("editQuoteId").value;
 
@@ -235,7 +246,7 @@ function fetchQuoteForEdit() {
         });
 }
 
-
+// Runs automatically on page load
 window.onload = () => {
     //loadQuotes();
     loadTagSuggestions();

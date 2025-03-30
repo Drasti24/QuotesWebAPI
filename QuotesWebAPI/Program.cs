@@ -39,5 +39,12 @@ app.UseAuthorization();
 
 //map controller routes to their respective endpoints
 app.MapControllers();
+
+// Redirect root URL to Swagger UI
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/swagger");
+    return Task.CompletedTask;
+});
 //start application
 app.Run();

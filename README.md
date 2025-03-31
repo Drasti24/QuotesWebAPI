@@ -146,3 +146,9 @@ cd QuoteWebAPI
 - **Name:** Drasti Patel  
 - **GitHub:** https://github.com/Drasti24
 - **Email:** drasti.patel2402@gmail.com
+
+---
+
+## 📝 License
+
+This project was developed as part of an academic assignment and is intended for educational use only.

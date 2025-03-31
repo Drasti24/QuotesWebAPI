@@ -73,6 +73,14 @@ A full-stack application that lets users manage quotes, tag them, and view top-l
 
 ---
 
+### 🖥️ Clone the Repo
+
+```bash
+git clone https://github.com/Drasti24/QuotesWebAPI.git
+cd QuoteWebAPI
+```
+---
+
 ### ⚙️ Backend Setup (ASP.NET Core API)
 
 ```bash
@@ -119,15 +127,6 @@ python client.py
 
 - Confirm that `appsettings.json` contains the correct connection string for your SQL Server or LocalDB instance.
 - Entity Framework Core is used for managing migrations and relationships.
-
----
-
-### 🖥️ Clone the Repo
-
-```bash
-git clone https://github.com/Drasti24/QuotesWebAPI.git
-cd QuoteWebAPI
-```
 
 ---
 

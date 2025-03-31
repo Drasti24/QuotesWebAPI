@@ -117,7 +117,6 @@ python client.py
 
 ### 🧩 Database Notes
 
-- The database name follows this format: `PA3<StudentNumber>`
 - Confirm that `appsettings.json` contains the correct connection string for your SQL Server or LocalDB instance.
 - Entity Framework Core is used for managing migrations and relationships.
 
